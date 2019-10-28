@@ -89,7 +89,9 @@ public class SongContent {
                         songImage
                 ));
             }
-            foundFiles = true;
+            if (files.length > 0) {
+                foundFiles = true;
+            }
         } catch (Throwable error) {
             Log.e("ERROR", "", error);
             Log.e("ERROR", "No music Files found, falling back to mock data");
