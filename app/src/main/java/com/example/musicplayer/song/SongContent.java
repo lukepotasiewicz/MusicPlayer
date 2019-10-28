@@ -1,6 +1,9 @@
 package com.example.musicplayer.song;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.media.MediaMetadataRetriever;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,23 +29,6 @@ public class SongContent {
     public static final Map<String, SongItem> ITEM_MAP = new HashMap<String, SongItem>();
 
     static {
-        try {
-            String path = "/mnt/sdcard/Download";
-            Log.d("Files", "Path: " + path);
-            File directory = new File(path);
-            Log.v("Files",directory.exists()+"");
-            Log.v("Files",directory.isDirectory()+"");
-            Log.v("Files",directory.listFiles()+"");
-            File[] files = directory.listFiles();
-            Log.d("Files", "Size: "+ files.length);
-            for (int i = 0; i < files.length; i++)
-            {
-                Log.d("Files", "FileName:" + files[i].getName());
-            }
-        } catch (Throwable error) {
-            Log.e("ERROR", "", error);
-            Log.e("ERROR", "No music Files found, falling back to mock data");
-        }
         List<String> SONG_NAMES = Arrays.asList(
                 "Song Name 1",
                 "Song Name 2",
@@ -79,9 +65,40 @@ public class SongContent {
                 "Artist Name 15",
                 "Artist Name 16"
         );
+        boolean foundFiles = false;
+        File[] files;
+        try {
+            String path = "/sdcard/Music";
+            Log.d("Files", "Path: " + path);
+            File directory = new File(path);
+            files = directory.listFiles();
+            Log.d("Files", "Size: " + files.length);
+            for (int i = 0; i < files.length; i++) {
+                MediaMetadataRetriever metaRetriever;
+                metaRetriever = new MediaMetadataRetriever();
+                metaRetriever.setDataSource("/sdcard/Music/" + files[i].getName());
+                byte[] art;
+                art = metaRetriever.getEmbeddedPicture();
+                Bitmap songImage = BitmapFactory.decodeByteArray(art, 0, art.length);
+
+                addItem(new SongItem(
+                        String.valueOf(i),
+                        metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
+                        metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
+                        Integer.parseInt(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))/1000,
+                        songImage
+                ));
+            }
+            foundFiles = true;
+        } catch (Throwable error) {
+            Log.e("ERROR", "", error);
+            Log.e("ERROR", "No music Files found, falling back to mock data");
+        }
         // Add some sample items.
-        for (int i = 0; i < SONG_NAMES.size(); i++) {
-            addItem(new SongItem(String.valueOf(i), SONG_NAMES.get(i), ARTIST_NAMES.get(i), 265));
+        if (!foundFiles) {
+            for (int i = 0; i < SONG_NAMES.size(); i++) {
+                addItem(new SongItem(String.valueOf(i), SONG_NAMES.get(i), ARTIST_NAMES.get(i), 265));
+            }
         }
     }
 
@@ -98,12 +115,22 @@ public class SongContent {
         public final String name;
         public final String artist;
         final int length;
+        public final Bitmap albumArt;
 
-        SongItem(String id, String name, String artist, int length ) {
+        SongItem(String id, String name, String artist, int length, Bitmap art) {
             this.id = id;
             this.name = name;
             this.artist = artist;
             this.length = length;
+            this.albumArt = art;
+        }
+
+        SongItem(String id, String name, String artist, int length) {
+            this.id = id;
+            this.name = name;
+            this.artist = artist;
+            this.length = length;
+            this.albumArt = null;
         }
 
         @Override
@@ -112,7 +139,10 @@ public class SongContent {
         }
 
         public String getFormattedLength() {
-            return length/60 + ":" + length%60;
+            if (length % 60 < 10) {
+                return length / 60 + ":0" + length % 60;
+            }
+            return length / 60 + ":" + length % 60;
         }
     }
 }
