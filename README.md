@@ -8,4 +8,5 @@ It helps if these files have metadata and album art. In the repo is a folder nam
 
 In the repo there is a image named "Music Files Placement Example.png" that has an example of music files correctly placed in the sd card of the emulator via the Device file explorer.
 
-For best results, use the Pixel 2 Emulator with API 28.
+For best results, use the Pixel 2 Emulator with API 28. 
+For best results also emulate this on a Mac, there is an issue with getting access to the music files on windows.
