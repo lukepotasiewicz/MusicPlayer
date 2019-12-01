@@ -10,3 +10,5 @@ In the repo there is a image named "Music Files Placement Example.png" that has 
 
 For best results, use the Pixel 2 Emulator with API 28. 
 For best results also emulate this on a Mac, there is an issue with getting access to the music files on windows.
+
+Also, on the "Playlist" page, clicking on the playlists requires two seperate clicks.
