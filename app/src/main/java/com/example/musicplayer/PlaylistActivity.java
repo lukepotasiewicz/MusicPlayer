@@ -24,8 +24,6 @@ import android.widget.TextView;
 
 import com.example.musicplayer.song.SongContent;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -153,6 +151,12 @@ public class PlaylistActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        songToAddId = "";
+        super.onDestroy();
     }
 
     @Override

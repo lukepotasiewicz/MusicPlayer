@@ -102,6 +102,7 @@ public class ItemListActivity extends AppCompatActivity {
             case R.id.delete_playlist:
                 ItemListActivity.mydatabase.delete("Playlists", "name = ?", new String[] {PlaylistActivity.currentPlaylist});
                 PlaylistActivity.playlistNames.remove(PlaylistActivity.currentPlaylist);
+                PlaylistActivity.currentPlaylist = "";
                 SongContent.ITEMS = new ArrayList<>(SongContent.ALL_SONGS);
                 Intent deleteIntent = new Intent(ItemListActivity.this, ItemListActivity.class);
                 startActivity(deleteIntent);

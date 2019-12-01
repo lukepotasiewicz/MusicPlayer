@@ -2,30 +2,17 @@ package com.example.musicplayer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.MenuItem;
+import android.widget.ImageButton;
 
-import com.example.musicplayer.song.SongContent;
-import com.example.musicplayer.song.SongContent.SongItem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
-import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 
-import android.view.MenuItem;
-import android.widget.ImageButton;
-
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-
-import android.net.Uri;
-
-import java.io.IOException;
 
 /**
  * An activity representing a single Item detail screen. This

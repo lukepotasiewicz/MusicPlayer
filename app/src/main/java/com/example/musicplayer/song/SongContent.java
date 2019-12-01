@@ -6,7 +6,6 @@ import android.util.Log;
 import android.media.MediaMetadataRetriever;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,43 +29,6 @@ public class SongContent {
     public static final Map<String, SongItem> ITEM_MAP = new HashMap<String, SongItem>();
 
     static {
-        List<String> SONG_NAMES = Arrays.asList(
-                "Song Name 1",
-                "Song Name 2",
-                "Song Name 3",
-                "Song Name 4",
-                "Song Name 5",
-                "Song Name 6",
-                "Song Name 7",
-                "Song Name 8",
-                "Song Name 9",
-                "Song Name 10",
-                "Song Name 11",
-                "Song Name 12",
-                "Song Name 13",
-                "Song Name 14",
-                "Song Name 15",
-                "Song Name 16"
-        );
-        List<String> ARTIST_NAMES = Arrays.asList(
-                "Artist Name 1",
-                "Artist Name 2",
-                "Artist Name 3",
-                "Artist Name 4",
-                "Artist Name 5",
-                "Artist Name 6",
-                "Artist Name 7",
-                "Artist Name 8",
-                "Artist Name 9",
-                "Artist Name 10",
-                "Artist Name 11",
-                "Artist Name 12",
-                "Artist Name 13",
-                "Artist Name 14",
-                "Artist Name 15",
-                "Artist Name 16"
-        );
-        boolean foundFiles = false;
         File[] files;
         try {
             File directory = new File("/sdcard/Music");
@@ -93,19 +55,10 @@ public class SongContent {
                 addItem(song);
                 ALL_SONGS.add(song);
             }
-            if (files.length > 0) {
-                foundFiles = true;
-            }
         } catch (Throwable error) {
             Log.e("ERROR", "", error);
             Log.e("ERROR", "No music Files found.");
         }
-        // Add some sample items.
-//        if (!foundFiles) {
-//            for (int i = 0; i < SONG_NAMES.size(); i++) {
-//                addItem(new SongItem(String.valueOf(i), SONG_NAMES.get(i), ARTIST_NAMES.get(i), 265));
-//            }
-//        }
     }
 
     public static void addItem(SongItem item) {
@@ -135,15 +88,6 @@ public class SongContent {
             this.length = length;
             this.albumArt = art;
             this.url = url;
-        }
-
-        SongItem(String id, String name, String artist, int length) {
-            this.id = id;
-            this.name = name;
-            this.artist = artist;
-            this.length = length;
-            this.albumArt = null;
-            this.url = null;
         }
 
         @Override
