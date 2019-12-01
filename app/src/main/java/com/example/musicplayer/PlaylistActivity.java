@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -45,6 +46,10 @@ public class PlaylistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
+
+        ItemListActivity.mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Playlists(name VARCHAR);");
+        ItemListActivity.mydatabase.execSQL("CREATE TABLE IF NOT EXISTS PlaylistSongs(name VARCHAR, song VARCHAR);");
+
         recyclerView = (RecyclerView) findViewById(R.id.playlist_recycler);
 
         // use this setting to improve performance if you know that changes
@@ -57,12 +62,52 @@ public class PlaylistActivity extends AppCompatActivity {
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(new ArrayList<>(playlistNames));
+        if (playlistNames.size() == 0) {
+            Cursor resultSet = ItemListActivity.mydatabase.rawQuery("Select * from Playlists", null);
+            if (resultSet.getCount() > 0) {
+                resultSet.moveToFirst();
+                String nameFromDB = resultSet.getString(0);
+                playlistNames.add(nameFromDB);
+                while (!resultSet.isLast()) {
+                    resultSet.moveToNext();
+                    nameFromDB = resultSet.getString(0);
+                    playlistNames.add(nameFromDB);
+                }
+            }
+            resultSet.close();
+            resultSet = ItemListActivity.mydatabase.rawQuery("Select * from PlaylistSongs", null);
+            resultSet.moveToFirst();
+            if (resultSet.getCount() > 0) {
+                resultSet.moveToFirst();
+                String playlistNameFromDB = resultSet.getString(0);
+                String songNameFromDB = resultSet.getString(1);
+                if (playlists.get(playlistNameFromDB) == null) {
+                    playlists.put(playlistNameFromDB, new ArrayList<>(Arrays.asList(songNameFromDB)));
+                } else {
+                    playlists.get(playlistNameFromDB).add(songNameFromDB);
+                }
+                playlists.put(playlistNameFromDB, new ArrayList<String>());
+                while (!resultSet.isLast()) {
+                    resultSet.moveToNext();
+                    playlistNameFromDB = resultSet.getString(0);
+                    songNameFromDB = resultSet.getString(1);
+                    if (playlists.get(playlistNameFromDB) == null) {
+                        playlists.put(playlistNameFromDB, new ArrayList<>(Arrays.asList(songNameFromDB)));
+                    } else {
+                        playlists.get(playlistNameFromDB).add(songNameFromDB);
+                    }
+                }
+                resultSet.close();
+            }
+        }
+
         for (String playlistName : playlistNames) {
             if (playlists.get(playlistName) == null) {
                 playlists.put(playlistName, new ArrayList<String>());
             }
         }
         recyclerView.setAdapter(mAdapter);
+
 
         final EditText playlistInput = findViewById(R.id.playlist_text);
         playlistInput.addTextChangedListener(new TextWatcher() {
@@ -88,6 +133,7 @@ public class PlaylistActivity extends AppCompatActivity {
                 playlistNames.add(playlistInputValue);
                 playlists.put(playlistInputValue, new ArrayList<String>());
                 mAdapter.notifyDataSetChanged();
+                ItemListActivity.mydatabase.execSQL("INSERT INTO Playlists VALUES('" + playlistInputValue + "');");
                 playlistInput.setText("");
             }
         });
@@ -105,6 +151,7 @@ public class PlaylistActivity extends AppCompatActivity {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
     }
 
     @Override
@@ -121,7 +168,7 @@ public class PlaylistActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch(id){
+        switch (id) {
             case R.id.main:
                 SongContent.clearSongs();
                 SongContent.ITEMS = new ArrayList<>(SongContent.ALL_SONGS);
@@ -181,6 +228,7 @@ public class PlaylistActivity extends AppCompatActivity {
                         }
                     } else {
                         playlists.get(playlistName).add(songToAddId);
+                        ItemListActivity.mydatabase.execSQL("INSERT INTO PlaylistSongs VALUES('" + playlistName + "','" + songToAddId + "');");
                         songToAddId = "";
                     }
                     Intent menuIntent = new Intent(PlaylistActivity.this, ItemListActivity.class);
