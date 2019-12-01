@@ -86,7 +86,6 @@ public class ItemListActivity extends AppCompatActivity {
 
         switch(id){
             case R.id.main:
-//                SongContent.clearSongs();
                 SongContent.ITEMS = new ArrayList<>(SongContent.ALL_SONGS);
                 mAdapter.notifyDataSetChanged();
                 Intent reloadIntent = new Intent(ItemListActivity.this, ItemListActivity.class);

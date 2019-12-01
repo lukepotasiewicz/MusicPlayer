@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -186,6 +187,8 @@ public class PlaylistActivity extends AppCompatActivity {
                     startActivity(menuIntent);
                 }
             });
+
+            v.setTextColor(Color.WHITE);
 
             MyViewHolder vh = new MyViewHolder(v);
             return vh;

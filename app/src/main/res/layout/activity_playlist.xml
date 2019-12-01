@@ -33,6 +33,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
@@ -40,13 +41,15 @@
             android:layout_width="369dp"
             android:layout_height="42dp"
             android:layout_margin="20dp"
-            android:text="" />
+            android:text=""
+            android:textColor="@android:color/background_light"
+            android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlist_recycler"
             android:layout_width="match_parent"
             android:layout_height="340dp"
-            android:layout_marginTop="100dp"/>
+            android:layout_marginTop="100dp" />
 
         <EditText
             android:id="@+id/playlist_text"
@@ -54,7 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:hint="playlist name"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColor="@android:color/background_light" />
 
         <Button
             android:id="@+id/playlist_add_button"
@@ -63,7 +67,8 @@
             android:layout_gravity="end"
             android:layout_margin="20dp"
             android:gravity="end"
-            android:text="Add Playlist" />
+            android:text="Add Playlist"
+            android:textColor="@android:color/background_dark" />
     </FrameLayout>
 
 

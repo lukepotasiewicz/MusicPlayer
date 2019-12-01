@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -93,6 +94,7 @@ public class ItemDetailFragment extends Fragment {
         // Show the song content as text in a TextView.
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.artist);
+            ((TextView) rootView.findViewById(R.id.item_detail)).setTextColor(Color.WHITE);
         }
 
         return rootView;
