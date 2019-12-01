@@ -21,7 +21,8 @@ public class SongContent {
     /**
      * An array of sample (song) items.
      */
-    public static final List<SongItem> ITEMS = new ArrayList<SongItem>();
+    public static List<SongItem> ITEMS = new ArrayList<>();
+    public static List<SongItem> ALL_SONGS = new ArrayList<>();
 
     /**
      * A map of sample (song) items, by ID.
@@ -68,45 +69,52 @@ public class SongContent {
         boolean foundFiles = false;
         File[] files;
         try {
-            String path = "/sdcard/Music";
-            Log.d("Files", "Path: " + path);
-            File directory = new File(path);
+            File directory = new File("/sdcard/Music");
             files = directory.listFiles();
-            Log.d("Files", "Size: " + files.length);
             for (int i = 0; i < files.length; i++) {
                 MediaMetadataRetriever metaRetriever;
                 metaRetriever = new MediaMetadataRetriever();
-                metaRetriever.setDataSource("/sdcard/Music/" + files[i].getName());
+                String url = "/sdcard/Music/" + files[i].getName();
+                metaRetriever.setDataSource(url);
                 byte[] art;
                 art = metaRetriever.getEmbeddedPicture();
                 Bitmap songImage = BitmapFactory.decodeByteArray(art, 0, art.length);
-
-                addItem(new SongItem(
-                        String.valueOf(i),
-                        metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
-                        metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
-                        Integer.parseInt(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))/1000,
-                        songImage
-                ));
+                String title =  metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                String artist =  metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                int duration = Integer.parseInt(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))/1000;
+                SongItem song = new SongItem(
+                        title + artist,
+                        title,
+                        artist,
+                        duration,
+                        songImage,
+                        url
+                );
+                addItem(song);
+                ALL_SONGS.add(song);
             }
             if (files.length > 0) {
                 foundFiles = true;
             }
         } catch (Throwable error) {
             Log.e("ERROR", "", error);
-            Log.e("ERROR", "No music Files found, falling back to mock data");
+            Log.e("ERROR", "No music Files found.");
         }
         // Add some sample items.
-        if (!foundFiles) {
-            for (int i = 0; i < SONG_NAMES.size(); i++) {
-                addItem(new SongItem(String.valueOf(i), SONG_NAMES.get(i), ARTIST_NAMES.get(i), 265));
-            }
-        }
+//        if (!foundFiles) {
+//            for (int i = 0; i < SONG_NAMES.size(); i++) {
+//                addItem(new SongItem(String.valueOf(i), SONG_NAMES.get(i), ARTIST_NAMES.get(i), 265));
+//            }
+//        }
     }
 
-    private static void addItem(SongItem item) {
+    public static void addItem(SongItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(String.valueOf(item.id), item);
+    }
+
+    public static void clearSongs() {
+        ITEMS.clear();
     }
 
     /**
@@ -116,15 +124,17 @@ public class SongContent {
         public final String id;
         public final String name;
         public final String artist;
+        public final String url;
         final int length;
         public final Bitmap albumArt;
 
-        SongItem(String id, String name, String artist, int length, Bitmap art) {
+        SongItem(String id, String name, String artist, int length, Bitmap art, String url) {
             this.id = id;
             this.name = name;
             this.artist = artist;
             this.length = length;
             this.albumArt = art;
+            this.url = url;
         }
 
         SongItem(String id, String name, String artist, int length) {
@@ -133,6 +143,7 @@ public class SongContent {
             this.artist = artist;
             this.length = length;
             this.albumArt = null;
+            this.url = null;
         }
 
         @Override

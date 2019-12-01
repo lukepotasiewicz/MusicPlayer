@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.musicplayer.PlaylistActivity">
+
+    <item
+        android:id="@+id/main"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="All Songs" />
+
+    <item
+        android:id="@+id/playlists"
+        android:icon="@android:drawable/ic_menu_mylocation"
+        android:title="Playlists" />
+
+
+</menu>

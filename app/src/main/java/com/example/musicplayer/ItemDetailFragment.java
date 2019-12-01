@@ -1,18 +1,23 @@
 package com.example.musicplayer;
 
 import android.app.Activity;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.musicplayer.song.SongContent;
+
+import java.io.IOException;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -27,6 +32,9 @@ public class ItemDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
+    public static MediaPlayer mPlayer = null;
+    public static String songId = "";
+
     /**
      * The song content this fragment is presenting.
      */
@@ -39,6 +47,7 @@ public class ItemDetailFragment extends Fragment {
     public ItemDetailFragment() {
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +57,25 @@ public class ItemDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             mItem = SongContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            songId = mItem.id;
+            try {
+                if (mPlayer == null) {
+                    Log.d("INFO:", "onCreate: Media Player created");
+                    mPlayer = new MediaPlayer();
+                } else {
+                    Log.d("INFO:", "onCreate: Media Player reset");
+                    if(mPlayer.isPlaying()) {
+                        mPlayer.stop();
+                    }
+                    mPlayer.reset();
+                }
+                mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mPlayer.setDataSource(mItem.url);
+                mPlayer.prepare();
+                mPlayer.start();
+            } catch (IOException e) {
+                Log.e("ERROR: ", "onCreate: ", e);
+            }
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
