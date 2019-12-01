@@ -33,6 +33,7 @@ import java.util.HashMap;
 
 public class PlaylistActivity extends AppCompatActivity {
     public static String songToAddId = "";
+    public static String currentPlaylist = "";
 
     public static String playlistInputValue = "";
     public static ArrayList<String> playlistNames = new ArrayList<>();
@@ -170,13 +171,13 @@ public class PlaylistActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.main:
-                SongContent.clearSongs();
                 SongContent.ITEMS = new ArrayList<>(SongContent.ALL_SONGS);
                 Intent menuIntent = new Intent(PlaylistActivity.this, ItemListActivity.class);
                 startActivity(menuIntent);
                 break;
             case R.id.playlists:
                 break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -226,6 +227,7 @@ public class PlaylistActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             Log.e("ERROR", "onClick: ", e);
                         }
+                        currentPlaylist = playlistName;
                     } else {
                         playlists.get(playlistName).add(songToAddId);
                         ItemListActivity.mydatabase.execSQL("INSERT INTO PlaylistSongs VALUES('" + playlistName + "','" + songToAddId + "');");

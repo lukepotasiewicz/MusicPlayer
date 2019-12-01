@@ -73,6 +73,11 @@ public class ItemListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        if (PlaylistActivity.currentPlaylist.length() == 0) {
+            MenuItem item = menu.findItem(R.id.delete_playlist);
+            item.setVisible(false);
+        }
         return true;
     }
 
@@ -94,6 +99,12 @@ public class ItemListActivity extends AppCompatActivity {
                 Intent menuIntent = new Intent(ItemListActivity.this, PlaylistActivity.class);
                 startActivity(menuIntent);
                 break;
+            case R.id.delete_playlist:
+                ItemListActivity.mydatabase.delete("Playlists", "name = ?", new String[] {PlaylistActivity.currentPlaylist});
+                PlaylistActivity.playlistNames.remove(PlaylistActivity.currentPlaylist);
+                SongContent.ITEMS = new ArrayList<>(SongContent.ALL_SONGS);
+                Intent deleteIntent = new Intent(ItemListActivity.this, ItemListActivity.class);
+                startActivity(deleteIntent);
         }
 
         return super.onOptionsItemSelected(item);
